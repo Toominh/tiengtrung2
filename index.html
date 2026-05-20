@@ -1,0 +1,649 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Bảng Phiên Âm Tiếng Trung</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;600;700&family=Noto+Sans+SC:wght@300;400;500&family=Ma+Shan+Zheng&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --red:        #c0392b;
+      --red-dark:   #96281b;
+      --red-light:  #e74c3c;
+      --gold:       #d4a843;
+      --gold-light: #f0c96e;
+      --ink:        #1a0a00;
+      --paper:      #fdf6e3;
+      --paper-dark: #f5e6c8;
+      --paper-mid:  #f9eed4;
+      --blue-row:   #e8f0f8;
+      --pink-row:   #fce8e8;
+      --green-row:  #e8f5e8;
+      --beige-row:  #f5f0e8;
+      --shadow:     rgba(90, 20, 0, 0.15);
+      --cell-hover: #fff9f0;
+      --playing-bg: #c0392b;
+      --playing-text: #fff;
+      --border:     #d4b896;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      background-color: #2c1a0e;
+      background-image:
+        radial-gradient(ellipse at 20% 0%, #4a2010 0%, transparent 50%),
+        radial-gradient(ellipse at 80% 100%, #3a1508 0%, transparent 50%),
+        url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.015'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+      min-height: 100vh;
+      font-family: 'Noto Sans SC', sans-serif;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 40px 20px 60px;
+    }
+
+    /* ─── HEADER ─── */
+    .header {
+      text-align: center;
+      margin-bottom: 36px;
+      animation: fadeDown 0.8s ease both;
+    }
+
+    .header-badge {
+      display: inline-block;
+      font-family: 'Ma Shan Zheng', serif;
+      font-size: 13px;
+      letter-spacing: 4px;
+      color: var(--gold);
+      border: 1px solid var(--gold);
+      padding: 4px 16px;
+      margin-bottom: 14px;
+      text-transform: uppercase;
+      opacity: 0.85;
+    }
+
+    h1 {
+      font-family: 'Noto Serif SC', serif;
+      font-size: clamp(26px, 4vw, 42px);
+      font-weight: 700;
+      color: var(--paper);
+      letter-spacing: 2px;
+      line-height: 1.2;
+      text-shadow: 0 2px 12px rgba(0,0,0,0.5);
+    }
+
+    h1 span {
+      color: var(--gold-light);
+    }
+
+    .subtitle {
+      margin-top: 10px;
+      font-size: 14px;
+      color: rgba(253,246,227,0.5);
+      letter-spacing: 1px;
+    }
+
+    /* ─── INSTRUCTION PILL ─── */
+    .tip {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(255,255,255,0.06);
+      border: 1px solid rgba(212,168,67,0.3);
+      border-radius: 40px;
+      padding: 8px 20px;
+      margin-bottom: 28px;
+      font-size: 13px;
+      color: var(--gold-light);
+      animation: fadeDown 0.8s 0.2s ease both;
+    }
+
+    .tip-icon {
+      font-size: 16px;
+      animation: pulse 2s ease infinite;
+    }
+
+    /* ─── TABLE WRAPPER ─── */
+    .table-wrap {
+      background: var(--paper);
+      border-radius: 12px;
+      box-shadow:
+        0 0 0 1px var(--border),
+        0 4px 6px var(--shadow),
+        0 20px 60px rgba(0,0,0,0.5),
+        inset 0 1px 0 rgba(255,255,255,0.8);
+      overflow: hidden;
+      animation: fadeUp 0.8s 0.1s ease both;
+      max-width: 100%;
+      overflow-x: auto;
+    }
+
+    /* ─── TABLE ─── */
+    table {
+      border-collapse: collapse;
+      min-width: 680px;
+    }
+
+    th, td {
+      border: 1px solid var(--border);
+      text-align: center;
+      font-size: 15px;
+      min-width: 70px;
+      height: 52px;
+      position: relative;
+      transition: background 0.15s;
+    }
+
+    /* Column headers */
+    thead th {
+      background: linear-gradient(180deg, #c0392b 0%, #96281b 100%);
+      color: #fff;
+      font-family: 'Noto Serif SC', serif;
+      font-size: 16px;
+      font-weight: 600;
+      letter-spacing: 1px;
+      height: 52px;
+      padding: 0 8px;
+      text-shadow: 0 1px 3px rgba(0,0,0,0.3);
+    }
+
+    thead th:first-child {
+      background: linear-gradient(135deg, #2c1a0e 0%, #4a2010 100%);
+      cursor: default;
+    }
+
+    thead th.header-cell {
+      cursor: pointer;
+      transition: all 0.18s ease;
+    }
+
+    thead th.header-cell:hover {
+      background: linear-gradient(180deg, #f0c96e 0%, #d4a843 100%) !important;
+      color: #2c1a0e !important;
+      transform: scale(1.07);
+      z-index: 10;
+      box-shadow: 0 4px 16px rgba(212,168,67,0.5);
+      text-shadow: none;
+    }
+
+    thead th.header-cell.playing {
+      background: linear-gradient(180deg, #f0c96e 0%, #c49b2a 100%) !important;
+      color: #2c1a0e !important;
+      transform: scale(1.07);
+      z-index: 10;
+      box-shadow: 0 4px 20px rgba(212,168,67,0.65);
+      text-shadow: none;
+      animation: rippleBg 0.5s ease;
+    }
+
+    thead th.header-cell.playing::after {
+      content: '♪';
+      position: absolute;
+      bottom: 3px;
+      right: 5px;
+      font-size: 9px;
+      opacity: 0.7;
+      animation: bounce 0.5s ease infinite alternate;
+    }
+
+    /* Row header */
+    tbody td:first-child {
+      background: linear-gradient(90deg, #c0392b 0%, #a93226 100%);
+      color: #fff;
+      font-family: 'Noto Serif SC', serif;
+      font-size: 17px;
+      font-weight: 700;
+      letter-spacing: 2px;
+      text-shadow: 0 1px 3px rgba(0,0,0,0.3);
+      min-width: 54px;
+      cursor: pointer;
+      transition: all 0.18s ease;
+    }
+
+    tbody td:first-child:hover {
+      background: linear-gradient(90deg, #f0c96e 0%, #d4a843 100%) !important;
+      color: #2c1a0e !important;
+      transform: scale(1.07);
+      z-index: 10;
+      box-shadow: 0 4px 16px rgba(212,168,67,0.5);
+      text-shadow: none;
+    }
+
+    tbody td.row-header-playing {
+      background: linear-gradient(90deg, #f0c96e 0%, #c49b2a 100%) !important;
+      color: #2c1a0e !important;
+      transform: scale(1.07);
+      z-index: 10;
+      box-shadow: 0 4px 20px rgba(212,168,67,0.65);
+      text-shadow: none;
+      animation: rippleBg 0.5s ease;
+    }
+
+    tbody td.row-header-playing::after {
+      content: '♪';
+      position: absolute;
+      bottom: 3px;
+      right: 5px;
+      font-size: 9px;
+      opacity: 0.7;
+      animation: bounce 0.5s ease infinite alternate;
+    }
+
+    /* Row color stripes */
+    tbody tr:nth-child(1) td:not(:first-child),
+    tbody tr:nth-child(2) td:not(:first-child) { background-color: var(--blue-row); }
+    tbody tr:nth-child(3) td:not(:first-child),
+    tbody tr:nth-child(4) td:not(:first-child) { background-color: var(--pink-row); }
+    tbody tr:nth-child(5) td:not(:first-child),
+    tbody tr:nth-child(6) td:not(:first-child) { background-color: var(--blue-row); }
+    tbody tr:nth-child(7) td:not(:first-child),
+    tbody tr:nth-child(8) td:not(:first-child) { background-color: var(--green-row); }
+    tbody tr:nth-child(9) td:not(:first-child),
+    tbody tr:nth-child(10) td:not(:first-child),
+    tbody tr:nth-child(11) td:not(:first-child) { background-color: var(--beige-row); }
+
+    /* Clickable cells */
+    td.cell {
+      cursor: pointer;
+      font-family: 'Noto Serif SC', serif;
+      font-size: 15px;
+      color: var(--ink);
+      font-weight: 400;
+      user-select: none;
+      transition: all 0.18s ease;
+    }
+
+    td.cell:hover {
+      background: var(--red) !important;
+      color: #fff !important;
+      transform: scale(1.06);
+      z-index: 10;
+      box-shadow: 0 4px 16px rgba(192,57,43,0.45);
+    }
+
+    td.cell.playing {
+      background: var(--red-dark) !important;
+      color: #fff !important;
+      transform: scale(1.06);
+      z-index: 10;
+      box-shadow: 0 4px 20px rgba(192,57,43,0.6);
+      animation: rippleBg 0.5s ease;
+    }
+
+    td.cell.playing::after {
+      content: '♪';
+      position: absolute;
+      bottom: 3px;
+      right: 5px;
+      font-size: 9px;
+      opacity: 0.7;
+      animation: bounce 0.5s ease infinite alternate;
+    }
+
+    td.empty {
+      background-color: rgba(0,0,0,0.04) !important;
+      cursor: default;
+    }
+
+    /* ─── TOAST ─── */
+    #toast {
+      position: fixed;
+      bottom: 32px;
+      left: 50%;
+      transform: translateX(-50%) translateY(80px);
+      background: var(--red-dark);
+      color: #fff;
+      padding: 12px 28px;
+      border-radius: 40px;
+      font-family: 'Noto Serif SC', serif;
+      font-size: 20px;
+      letter-spacing: 2px;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.4);
+      transition: transform 0.35s cubic-bezier(0.34,1.56,0.64,1), opacity 0.3s;
+      opacity: 0;
+      pointer-events: none;
+      z-index: 999;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    #toast.show {
+      transform: translateX(-50%) translateY(0);
+      opacity: 1;
+    }
+
+    #toast .toast-pinyin { font-size: 22px; font-weight: 700; }
+    #toast .toast-label { font-size: 12px; opacity: 0.75; letter-spacing: 1px; font-family: 'Noto Sans SC', sans-serif; }
+
+    /* ─── VOICE STATUS ─── */
+    .voice-status {
+      margin-top: 22px;
+      font-size: 12px;
+      color: rgba(253,246,227,0.4);
+      animation: fadeUp 0.8s 0.5s ease both;
+      text-align: center;
+    }
+
+    .voice-dot {
+      display: inline-block;
+      width: 7px; height: 7px;
+      border-radius: 50%;
+      background: #27ae60;
+      margin-right: 6px;
+      vertical-align: middle;
+      animation: pulse 1.5s ease infinite;
+    }
+
+    .voice-dot.red { background: #e74c3c; animation: none; }
+
+    /* ─── ANIMATIONS ─── */
+    @keyframes fadeDown {
+      from { opacity: 0; transform: translateY(-20px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes pulse {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50%       { opacity: 0.6; transform: scale(0.85); }
+    }
+    @keyframes bounce {
+      from { transform: translateY(0); }
+      to   { transform: translateY(-3px); }
+    }
+    @keyframes rippleBg {
+      0%   { box-shadow: 0 0 0 0 rgba(192,57,43,0.6); }
+      100% { box-shadow: 0 0 0 12px rgba(192,57,43,0); }
+    }
+
+    /* ─── LEGEND ─── */
+    .legend {
+      display: flex;
+      gap: 20px;
+      flex-wrap: wrap;
+      justify-content: center;
+      margin-top: 20px;
+      animation: fadeUp 0.8s 0.4s ease both;
+    }
+
+    .legend-item {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      font-size: 12px;
+      color: rgba(253,246,227,0.55);
+    }
+
+    .legend-swatch {
+      width: 22px; height: 14px;
+      border-radius: 3px;
+      border: 1px solid rgba(255,255,255,0.15);
+    }
+
+    @media (max-width: 600px) {
+      body { padding: 20px 10px 40px; }
+      th, td { min-width: 52px; height: 44px; font-size: 13px; }
+      thead th { font-size: 14px; }
+      tbody td:first-child { font-size: 15px; min-width: 40px; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- HEADER -->
+  <div class="header">
+    <div class="header-badge">汉语拼音 · Hàn Ngữ Phiên Âm</div>
+    <h1>Bảng <span>Phiên Âm</span> Tiếng Trung</h1>
+    <p class="subtitle">Thanh mẫu × Vận mẫu · Bấm vào ô để nghe phát âm</p>
+  </div>
+
+  <!-- TIP -->
+  <div class="tip">
+    <span class="tip-icon">👆</span>
+    Nhấp vào bất kỳ ô nào để nghe phát âm tiếng Trung chuẩn
+  </div>
+
+  <!-- TABLE -->
+  <div class="table-wrap">
+    <table id="pinyinTable">
+      <thead>
+        <tr id="headerRow">
+          <th></th>
+          <th class="header-cell" data-pinyin="a">a</th>
+          <th class="header-cell" data-pinyin="o">o</th>
+          <th class="header-cell" data-pinyin="e">e</th>
+          <th class="header-cell" data-pinyin="i">i</th>
+          <th class="header-cell" data-pinyin="u">u</th>
+          <th class="header-cell" data-pinyin="ü">ü</th>
+          <th class="header-cell" data-pinyin="ai">ai</th>
+          <th class="header-cell" data-pinyin="ei">ei</th>
+          <th class="header-cell" data-pinyin="ao">ao</th>
+          <th class="header-cell" data-pinyin="ou">ou</th>
+        </tr>
+      </thead>
+      <tbody id="tableBody"></tbody>
+    </table>
+  </div>
+
+  <!-- LEGEND -->
+  <div class="legend">
+    <div class="legend-item"><div class="legend-swatch" style="background:#e8f0f8"></div>b / p · d / t</div>
+    <div class="legend-item"><div class="legend-swatch" style="background:#fce8e8"></div>m / f</div>
+    <div class="legend-item"><div class="legend-swatch" style="background:#e8f5e8"></div>n / l</div>
+    <div class="legend-item"><div class="legend-swatch" style="background:#f5f0e8"></div>g / k / h</div>
+  </div>
+
+  <!-- VOICE STATUS -->
+  <div class="voice-status" id="voiceStatus">
+    <span class="voice-dot" id="voiceDot"></span>
+    <span id="voiceMsg">Đang kiểm tra giọng đọc tiếng Trung…</span>
+  </div>
+
+  <!-- TOAST -->
+  <div id="toast">
+    <div>
+      <div class="toast-pinyin" id="toastText"></div>
+      <div class="toast-label">đang phát âm…</div>
+    </div>
+    <span style="font-size:20px;">🔊</span>
+  </div>
+
+  <script>
+    // ─── DATA ───────────────────────────────────────────────────────────────
+    const initials = ['b','p','m','f','d','t','n','l','g','k','h'];
+    const finals   = ['a','o','e','i','u','ü','ai','ei','ao','ou'];
+
+    // Valid combinations from the chart (null = empty cell)
+    const data = {
+      b: ['ba','bo', null,'bi','bu', null,'bai','bei','bao', null],
+      p: ['pa','po', null,'pi','pu', null,'pai','pei','pao','pou'],
+      m: ['ma','mo','me','mi','mu',  null,'mai','mei','mao','mou'],
+      f: ['fa','fo', null, null,'fu',null, null,'fei', null,'fou'],
+      d: ['da', null,'de','di','du', null,'dai','dei','dao','dou'],
+      t: ['ta', null,'te','ti','tu', null,'tai', null,'tao','tou'],
+      n: ['na', null,'ne','ni','nu','nü','nai','nei','nao','nou'],
+      l: ['la', null,'le','li','lu','lü','lai','lei','lao','lou'],
+      g: ['ga', null,'ge', null,'gu',null,'gai','gei','gao','gou'],
+      k: ['ka', null,'ke', null,'ku',null,'kai','kei','kao','kou'],
+      h: ['ha', null,'he', null,'hu',null,'hai','hei','hao','hou'],
+    };
+
+    // Pinyin → Chinese character used for TTS
+    // We speak the pinyin directly with zh-CN voice
+    const pinyinMap = {
+      'nü': 'nü', 'lü': 'lü',
+    };
+
+    // ─── BUILD TABLE ─────────────────────────────────────────────────────────
+    const tbody = document.getElementById('tableBody');
+
+    initials.forEach(init => {
+      const row = document.createElement('tr');
+
+      // Row header — clickable
+      const th = document.createElement('td');
+      th.textContent = init;
+      th.dataset.pinyin = init;
+      th.setAttribute('title', `Phát âm: ${init}`);
+      th.addEventListener('click', () => playHeader(init, th, 'row'));
+      row.appendChild(th);
+
+      // Syllable cells
+      data[init].forEach((syllable, idx) => {
+        const td = document.createElement('td');
+        if (syllable) {
+          td.textContent = syllable;
+          td.className = 'cell';
+          td.dataset.pinyin = syllable;
+          td.addEventListener('click', () => playSyllable(syllable, td));
+          td.setAttribute('title', `Phát âm: ${syllable}`);
+        } else {
+          td.className = 'empty';
+        }
+        row.appendChild(td);
+      });
+
+      tbody.appendChild(row);
+    });
+
+    // Wire up column header clicks
+    document.querySelectorAll('thead th.header-cell').forEach(th => {
+      th.addEventListener('click', () => playHeader(th.dataset.pinyin, th, 'col'));
+    });
+
+    // ─── SPEECH ──────────────────────────────────────────────────────────────
+    let chineseVoice = null;
+    let activeCell   = null;
+    let activeHeader = null; // {el, type}
+    let toastTimer   = null;
+
+    function playHeader(syllable, el, type) {
+      // Clear any previously highlighted header
+      if (activeHeader) {
+        const cls = activeHeader.type === 'row' ? 'row-header-playing' : 'playing';
+        activeHeader.el.classList.remove(cls);
+      }
+      playSyllable(syllable, null, el, type);
+    }
+
+    function initVoices() {
+      const voices = speechSynthesis.getVoices();
+      // Prefer zh-CN or zh-TW or zh voices
+      chineseVoice =
+        voices.find(v => v.lang === 'zh-CN') ||
+        voices.find(v => v.lang === 'zh-TW') ||
+        voices.find(v => v.lang.startsWith('zh'))  ||
+        null;
+
+      const dot = document.getElementById('voiceDot');
+      const msg = document.getElementById('voiceMsg');
+      if (chineseVoice) {
+        dot.classList.remove('red');
+        msg.textContent = `Giọng đọc: ${chineseVoice.name} (${chineseVoice.lang})`;
+      } else {
+        dot.classList.add('red');
+        msg.textContent = 'Không tìm thấy giọng tiếng Trung — sẽ dùng giọng mặc định';
+      }
+    }
+
+    if (speechSynthesis.onvoiceschanged !== undefined) {
+      speechSynthesis.onvoiceschanged = initVoices;
+    }
+    setTimeout(initVoices, 400);
+
+    function playSyllable(syllable, cell, headerEl, headerType) {
+      // Try local audio file first
+      const audioPath = `audio/${syllable}.mp3`;
+      const audio = new Audio(audioPath);
+
+      audio.oncanplaythrough = () => {
+        setPlaying(cell, syllable, headerEl, headerType);
+        audio.play();
+        audio.onended = () => clearPlaying(cell, headerEl, headerType);
+      };
+      audio.onerror = () => {
+        speakWithTTS(syllable, cell, headerEl, headerType);
+      };
+
+      audio.load();
+      setTimeout(() => {
+        if (audio.readyState < 3) {
+          audio.onerror = null;
+          speakWithTTS(syllable, cell, headerEl, headerType);
+        }
+      }, 200);
+    }
+
+    function speakWithTTS(syllable, cell, headerEl, headerType) {
+      speechSynthesis.cancel();
+
+      const utter = new SpeechSynthesisUtterance(syllable);
+      utter.lang  = 'zh-CN';
+      utter.rate  = 0.85;
+      utter.pitch = 1;
+      if (chineseVoice) utter.voice = chineseVoice;
+
+      setPlaying(cell, syllable, headerEl, headerType);
+      utter.onend   = () => clearPlaying(cell, headerEl, headerType);
+      utter.onerror = () => clearPlaying(cell, headerEl, headerType);
+
+      speechSynthesis.speak(utter);
+    }
+
+    function setPlaying(cell, syllable, headerEl, headerType) {
+      // Clear previous regular cell
+      if (activeCell) activeCell.classList.remove('playing');
+      activeCell = cell;
+      if (cell) cell.classList.add('playing');
+
+      // Clear previous header
+      if (activeHeader) {
+        const cls = activeHeader.type === 'row' ? 'row-header-playing' : 'playing';
+        activeHeader.el.classList.remove(cls);
+        activeHeader = null;
+      }
+      if (headerEl) {
+        const cls = headerType === 'row' ? 'row-header-playing' : 'playing';
+        headerEl.classList.add(cls);
+        activeHeader = { el: headerEl, type: headerType };
+      }
+
+      // Toast
+      clearTimeout(toastTimer);
+      document.getElementById('toastText').textContent = syllable;
+      const toast = document.getElementById('toast');
+      toast.classList.add('show');
+      toastTimer = setTimeout(() => toast.classList.remove('show'), 2200);
+    }
+
+    function clearPlaying(cell, headerEl, headerType) {
+      if (cell) cell.classList.remove('playing');
+      if (activeCell === cell) activeCell = null;
+      if (headerEl) {
+        const cls = headerType === 'row' ? 'row-header-playing' : 'playing';
+        headerEl.classList.remove(cls);
+        if (activeHeader && activeHeader.el === headerEl) activeHeader = null;
+      }
+    }
+
+    // Keyboard shortcut: Escape cancels speech
+    document.addEventListener('keydown', e => {
+      if (e.key === 'Escape') {
+        speechSynthesis.cancel();
+        if (activeCell) clearPlaying(activeCell, null, null);
+        if (activeHeader) {
+          const cls = activeHeader.type === 'row' ? 'row-header-playing' : 'playing';
+          activeHeader.el.classList.remove(cls);
+          activeHeader = null;
+        }
+        document.getElementById('toast').classList.remove('show');
+      }
+    });
+  </script>
+</body>
+</html>

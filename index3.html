@@ -557,27 +557,21 @@
     setTimeout(initVoices, 400);
 
     function playSyllable(syllable, cell, headerEl, headerType) {
+      // Dừng mọi thứ đang phát trước
       speechSynthesis.cancel();
-      tryPlayAudio(['mp3', 'm4a', 'ogg'], syllable, cell, headerEl, headerType);
-    }
 
-    function tryPlayAudio(formats, syllable, cell, headerEl, headerType) {
-      if (formats.length === 0) {
-        speakWithTTS(syllable, cell, headerEl, headerType);
-        return;
-      }
-      const [fmt, ...rest] = formats;
-      const audio = new Audio(`audio/${syllable}.${fmt}`);
+      const audio = new Audio(`audio/${syllable}.mp3`);
 
+      // Nếu load file thành công → phát file, KHÔNG gọi TTS
       audio.addEventListener('canplaythrough', () => {
         setPlaying(cell, syllable, headerEl, headerType);
         audio.play();
         audio.addEventListener('ended', () => clearPlaying(cell, headerEl, headerType), { once: true });
       }, { once: true });
 
-      // Thử định dạng tiếp theo nếu không tìm thấy
+      // Nếu file lỗi / không tồn tại → dùng TTS
       audio.addEventListener('error', () => {
-        tryPlayAudio(rest, syllable, cell, headerEl, headerType);
+        speakWithTTS(syllable, cell, headerEl, headerType);
       }, { once: true });
     }
 

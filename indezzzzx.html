@@ -1,0 +1,1457 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Bảng Phiên Âm Tiếng Trung</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;600;700&family=Noto+Sans+SC:wght@300;400;500&family=Ma+Shan+Zheng&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --red:        #c0392b;
+      --red-dark:   #96281b;
+      --red-light:  #e74c3c;
+      --gold:       #d4a843;
+      --gold-light: #f0c96e;
+      --ink:        #1a0a00;
+      --paper:      #fdf6e3;
+      --paper-dark: #f5e6c8;
+      --paper-mid:  #f9eed4;
+      --blue-row:   #e8f0f8;
+      --pink-row:   #fce8e8;
+      --green-row:  #e8f5e8;
+      --beige-row:  #f5f0e8;
+      --shadow:     rgba(90, 20, 0, 0.15);
+      --cell-hover: #fff9f0;
+      --playing-bg: #c0392b;
+      --playing-text: #fff;
+      --border:     #d4b896;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      background-color: #2c1a0e;
+      background-image:
+        radial-gradient(ellipse at 20% 0%, #4a2010 0%, transparent 50%),
+        radial-gradient(ellipse at 80% 100%, #3a1508 0%, transparent 50%),
+        url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.015'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+      min-height: 100vh;
+      font-family: 'Noto Sans SC', sans-serif;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 40px 20px 80px;
+    }
+
+    /* ─── HEADER ─── */
+    .header {
+      text-align: center;
+      margin-bottom: 36px;
+      animation: fadeDown 0.8s ease both;
+    }
+
+    .header-badge {
+      display: inline-block;
+      font-family: 'Ma Shan Zheng', serif;
+      font-size: 13px;
+      letter-spacing: 4px;
+      color: var(--gold);
+      border: 1px solid var(--gold);
+      padding: 4px 16px;
+      margin-bottom: 14px;
+      text-transform: uppercase;
+      opacity: 0.85;
+    }
+
+    h1 {
+      font-family: 'Noto Serif SC', serif;
+      font-size: clamp(26px, 4vw, 42px);
+      font-weight: 700;
+      color: var(--paper);
+      letter-spacing: 2px;
+      line-height: 1.2;
+      text-shadow: 0 2px 12px rgba(0,0,0,0.5);
+    }
+
+    h1 span { color: var(--gold-light); }
+
+    .subtitle {
+      margin-top: 10px;
+      font-size: 14px;
+      color: rgba(253,246,227,0.5);
+      letter-spacing: 1px;
+    }
+
+    /* ─── INSTRUCTION PILL ─── */
+    .tip {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(255,255,255,0.06);
+      border: 1px solid rgba(212,168,67,0.3);
+      border-radius: 40px;
+      padding: 8px 20px;
+      margin-bottom: 28px;
+      font-size: 13px;
+      color: var(--gold-light);
+      animation: fadeDown 0.8s 0.2s ease both;
+    }
+
+    .tip-icon { font-size: 16px; animation: pulse 2s ease infinite; }
+
+    /* ─── TABLE WRAPPER ─── */
+    .table-wrap {
+      background: var(--paper);
+      border-radius: 12px;
+      box-shadow:
+        0 0 0 1px var(--border),
+        0 4px 6px var(--shadow),
+        0 20px 60px rgba(0,0,0,0.5),
+        inset 0 1px 0 rgba(255,255,255,0.8);
+      overflow: hidden;
+      animation: fadeUp 0.8s 0.1s ease both;
+      max-width: 100%;
+      overflow-x: auto;
+    }
+
+    /* ─── TABLE ─── */
+    table { border-collapse: collapse; min-width: 680px; }
+
+    th, td {
+      border: 1px solid var(--border);
+      text-align: center;
+      font-size: 15px;
+      min-width: 70px;
+      height: 52px;
+      position: relative;
+      transition: background 0.15s;
+    }
+
+    thead th {
+      background: linear-gradient(180deg, #c0392b 0%, #96281b 100%);
+      color: #fff;
+      font-family: 'Noto Serif SC', serif;
+      font-size: 16px;
+      font-weight: 600;
+      letter-spacing: 1px;
+      height: 52px;
+      padding: 0 8px;
+      text-shadow: 0 1px 3px rgba(0,0,0,0.3);
+    }
+
+    thead th:first-child {
+      background: linear-gradient(135deg, #2c1a0e 0%, #4a2010 100%);
+      cursor: default;
+    }
+
+    thead th.header-cell { cursor: pointer; transition: all 0.18s ease; }
+
+    thead th.header-cell:hover {
+      background: linear-gradient(180deg, #f0c96e 0%, #d4a843 100%) !important;
+      color: #2c1a0e !important;
+      transform: scale(1.07);
+      z-index: 10;
+      box-shadow: 0 4px 16px rgba(212,168,67,0.5);
+      text-shadow: none;
+    }
+
+    thead th.header-cell.playing {
+      background: linear-gradient(180deg, #f0c96e 0%, #c49b2a 100%) !important;
+      color: #2c1a0e !important;
+      transform: scale(1.07);
+      z-index: 10;
+      box-shadow: 0 4px 20px rgba(212,168,67,0.65);
+      text-shadow: none;
+      animation: rippleBg 0.5s ease;
+    }
+
+    thead th.header-cell.playing::after {
+      content: '♪';
+      position: absolute;
+      bottom: 3px; right: 5px;
+      font-size: 9px; opacity: 0.7;
+      animation: bounce 0.5s ease infinite alternate;
+    }
+
+    tbody td:first-child {
+      background: linear-gradient(90deg, #c0392b 0%, #a93226 100%);
+      color: #fff;
+      font-family: 'Noto Serif SC', serif;
+      font-size: 17px;
+      font-weight: 700;
+      letter-spacing: 2px;
+      text-shadow: 0 1px 3px rgba(0,0,0,0.3);
+      min-width: 54px;
+      cursor: pointer;
+      transition: all 0.18s ease;
+    }
+
+    tbody td:first-child:hover {
+      background: linear-gradient(90deg, #f0c96e 0%, #d4a843 100%) !important;
+      color: #2c1a0e !important;
+      transform: scale(1.07);
+      z-index: 10;
+      box-shadow: 0 4px 16px rgba(212,168,67,0.5);
+      text-shadow: none;
+    }
+
+    tbody td.row-header-playing {
+      background: linear-gradient(90deg, #f0c96e 0%, #c49b2a 100%) !important;
+      color: #2c1a0e !important;
+      transform: scale(1.07);
+      z-index: 10;
+      box-shadow: 0 4px 20px rgba(212,168,67,0.65);
+      text-shadow: none;
+      animation: rippleBg 0.5s ease;
+    }
+
+    tbody td.row-header-playing::after {
+      content: '♪';
+      position: absolute;
+      bottom: 3px; right: 5px;
+      font-size: 9px; opacity: 0.7;
+      animation: bounce 0.5s ease infinite alternate;
+    }
+
+    tbody tr:nth-child(1) td:not(:first-child),
+    tbody tr:nth-child(2) td:not(:first-child) { background-color: var(--blue-row); }
+    tbody tr:nth-child(3) td:not(:first-child),
+    tbody tr:nth-child(4) td:not(:first-child) { background-color: var(--pink-row); }
+    tbody tr:nth-child(5) td:not(:first-child),
+    tbody tr:nth-child(6) td:not(:first-child) { background-color: var(--blue-row); }
+    tbody tr:nth-child(7) td:not(:first-child),
+    tbody tr:nth-child(8) td:not(:first-child) { background-color: var(--green-row); }
+    tbody tr:nth-child(9) td:not(:first-child),
+    tbody tr:nth-child(10) td:not(:first-child),
+    tbody tr:nth-child(11) td:not(:first-child) { background-color: var(--beige-row); }
+
+    td.cell {
+      cursor: pointer;
+      font-family: 'Noto Serif SC', serif;
+      font-size: 15px;
+      color: var(--ink);
+      font-weight: 400;
+      user-select: none;
+      transition: all 0.18s ease;
+    }
+
+    td.cell:hover {
+      background: var(--red) !important;
+      color: #fff !important;
+      transform: scale(1.06);
+      z-index: 10;
+      box-shadow: 0 4px 16px rgba(192,57,43,0.45);
+    }
+
+    td.cell.playing {
+      background: var(--red-dark) !important;
+      color: #fff !important;
+      transform: scale(1.06);
+      z-index: 10;
+      box-shadow: 0 4px 20px rgba(192,57,43,0.6);
+      animation: rippleBg 0.5s ease;
+    }
+
+    td.cell.playing::after {
+      content: '♪';
+      position: absolute;
+      bottom: 3px; right: 5px;
+      font-size: 9px; opacity: 0.7;
+      animation: bounce 0.5s ease infinite alternate;
+    }
+
+    td.empty {
+      background-color: rgba(0,0,0,0.04) !important;
+      cursor: default;
+    }
+
+    /* ─── TOAST ─── */
+    #toast {
+      position: fixed;
+      bottom: 32px;
+      left: 50%;
+      transform: translateX(-50%) translateY(80px);
+      background: var(--red-dark);
+      color: #fff;
+      padding: 12px 28px;
+      border-radius: 40px;
+      font-family: 'Noto Serif SC', serif;
+      font-size: 20px;
+      letter-spacing: 2px;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.4);
+      transition: transform 0.35s cubic-bezier(0.34,1.56,0.64,1), opacity 0.3s;
+      opacity: 0;
+      pointer-events: none;
+      z-index: 999;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    #toast.show { transform: translateX(-50%) translateY(0); opacity: 1; }
+    #toast .toast-pinyin { font-size: 22px; font-weight: 700; }
+    #toast .toast-label { font-size: 12px; opacity: 0.75; letter-spacing: 1px; font-family: 'Noto Sans SC', sans-serif; }
+
+    /* ─── VOICE STATUS ─── */
+    .voice-status {
+      margin-top: 22px;
+      font-size: 12px;
+      color: rgba(253,246,227,0.4);
+      animation: fadeUp 0.8s 0.5s ease both;
+      text-align: center;
+    }
+
+    .voice-dot {
+      display: inline-block;
+      width: 7px; height: 7px;
+      border-radius: 50%;
+      background: #27ae60;
+      margin-right: 6px;
+      vertical-align: middle;
+      animation: pulse 1.5s ease infinite;
+    }
+
+    .voice-dot.red { background: #e74c3c; animation: none; }
+
+    /* ─── ANIMATIONS ─── */
+    @keyframes fadeDown {
+      from { opacity: 0; transform: translateY(-20px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes pulse {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50%       { opacity: 0.6; transform: scale(0.85); }
+    }
+    @keyframes bounce {
+      from { transform: translateY(0); }
+      to   { transform: translateY(-3px); }
+    }
+    @keyframes rippleBg {
+      0%   { box-shadow: 0 0 0 0 rgba(192,57,43,0.6); }
+      100% { box-shadow: 0 0 0 12px rgba(192,57,43,0); }
+    }
+    @keyframes shake {
+      0%, 100% { transform: translateX(0); }
+      20% { transform: translateX(-9px); }
+      40% { transform: translateX(9px); }
+      60% { transform: translateX(-5px); }
+      80% { transform: translateX(5px); }
+    }
+    @keyframes correctPop {
+      0%   { transform: scale(1); }
+      40%  { transform: scale(1.08); }
+      100% { transform: scale(1); }
+    }
+
+    /* ─── LEGEND ─── */
+    .legend {
+      display: flex;
+      gap: 20px;
+      flex-wrap: wrap;
+      justify-content: center;
+      margin-top: 20px;
+      animation: fadeUp 0.8s 0.4s ease both;
+    }
+
+    .legend-item {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      font-size: 12px;
+      color: rgba(253,246,227,0.55);
+    }
+
+    .legend-swatch {
+      width: 22px; height: 14px;
+      border-radius: 3px;
+      border: 1px solid rgba(255,255,255,0.15);
+    }
+
+    /* ═══════════════════════════════════════════════════════
+       PRACTICE SECTION
+    ═══════════════════════════════════════════════════════ */
+
+    .practice-divider {
+      width: 100%;
+      max-width: 760px;
+      margin: 64px 0 0;
+      display: flex;
+      align-items: center;
+      gap: 18px;
+    }
+
+    .practice-divider::before,
+    .practice-divider::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(212,168,67,0.35), transparent);
+    }
+
+    .practice-divider-inner {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .practice-divider-zh {
+      font-family: 'Ma Shan Zheng', serif;
+      font-size: 22px;
+      color: var(--gold);
+      opacity: 0.75;
+    }
+
+    .practice-divider-vi {
+      font-size: 11px;
+      letter-spacing: 3px;
+      color: rgba(212,168,67,0.45);
+      text-transform: uppercase;
+    }
+
+    .practice-section {
+      width: 100%;
+      max-width: 760px;
+      margin-top: 32px;
+    }
+
+    /* TABS */
+    .practice-tabs {
+      display: flex;
+      gap: 12px;
+      margin-bottom: 18px;
+    }
+
+    .ptab {
+      flex: 1;
+      padding: 16px 12px 14px;
+      border: 2px solid rgba(212,168,67,0.2);
+      background: rgba(255,255,255,0.04);
+      border-radius: 10px;
+      color: rgba(253,246,227,0.5);
+      cursor: pointer;
+      font-family: 'Noto Sans SC', sans-serif;
+      transition: all 0.22s;
+      text-align: center;
+      line-height: 1.3;
+      user-select: none;
+    }
+
+    .ptab:hover:not(.active) {
+      border-color: rgba(212,168,67,0.45);
+      color: var(--gold-light);
+      background: rgba(212,168,67,0.06);
+    }
+
+    .ptab.active {
+      background: rgba(192,57,43,0.22);
+      border-color: var(--red-light);
+      color: var(--paper);
+    }
+
+    .ptab-icon { font-size: 22px; display: block; margin-bottom: 5px; }
+    .ptab-label { font-size: 14px; font-weight: 500; display: block; }
+    .ptab-desc { font-size: 11px; opacity: 0.6; margin-top: 3px; display: block; }
+
+    /* PANEL */
+    .practice-panel {
+      background: rgba(255,255,255,0.045);
+      border: 1px solid rgba(212,168,67,0.18);
+      border-radius: 12px;
+      padding: 30px 32px 26px;
+      backdrop-filter: blur(2px);
+    }
+
+    /* ─── RANDOM MODE ─── */
+    .quiz-stage {
+      text-align: center;
+      margin-bottom: 26px;
+      min-height: 90px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+    }
+
+    .quiz-wave {
+      display: flex;
+      align-items: flex-end;
+      justify-content: center;
+      gap: 5px;
+      height: 48px;
+    }
+
+    .quiz-wave-bar {
+      width: 6px;
+      border-radius: 3px;
+      background: var(--red);
+      opacity: 0.7;
+      transition: height 0.2s;
+    }
+
+    .quiz-wave-bar:nth-child(1) { height: 18px; animation: waveBar 0.9s 0.0s ease-in-out infinite alternate; }
+    .quiz-wave-bar:nth-child(2) { height: 32px; animation: waveBar 0.9s 0.12s ease-in-out infinite alternate; }
+    .quiz-wave-bar:nth-child(3) { height: 44px; animation: waveBar 0.9s 0.24s ease-in-out infinite alternate; }
+    .quiz-wave-bar:nth-child(4) { height: 28px; animation: waveBar 0.9s 0.36s ease-in-out infinite alternate; }
+    .quiz-wave-bar:nth-child(5) { height: 16px; animation: waveBar 0.9s 0.48s ease-in-out infinite alternate; }
+
+    .quiz-wave-bar.paused { animation-play-state: paused; opacity: 0.3; }
+
+    @keyframes waveBar {
+      from { transform: scaleY(0.4); opacity: 0.5; }
+      to   { transform: scaleY(1);   opacity: 1; }
+    }
+
+    .quiz-score-text {
+      font-size: 13px;
+      color: rgba(253,246,227,0.45);
+      letter-spacing: 1px;
+    }
+
+    .quiz-streak {
+      font-size: 12px;
+      color: var(--gold-light);
+      opacity: 0;
+      transition: opacity 0.3s;
+    }
+
+    .quiz-streak.show { opacity: 1; }
+
+    /* Input row */
+    .quiz-input-row {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 10px;
+      align-items: stretch;
+    }
+
+    .quiz-input {
+      flex: 1;
+      min-width: 0;
+      padding: 14px 18px;
+      font-size: 22px;
+      font-family: 'Noto Serif SC', serif;
+      background: rgba(255,255,255,0.08);
+      border: 2px solid rgba(212,168,67,0.3);
+      border-radius: 8px;
+      color: var(--paper);
+      outline: none;
+      transition: border-color 0.2s, background 0.2s;
+      text-align: center;
+      letter-spacing: 3px;
+    }
+
+    .quiz-input:focus { border-color: var(--gold); }
+    .quiz-input::placeholder { color: rgba(253,246,227,0.2); font-size: 15px; letter-spacing: 1px; }
+    .quiz-input:disabled { opacity: 0.6; }
+
+    .quiz-input.state-correct {
+      border-color: #27ae60 !important;
+      background: rgba(39,174,96,0.1);
+      animation: correctPop 0.35s ease;
+    }
+
+    .quiz-input.state-wrong {
+      border-color: #e74c3c !important;
+      background: rgba(231,76,60,0.1);
+      animation: shake 0.4s ease;
+    }
+
+    /* Buttons */
+    .pb {
+      display: inline-flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 3px;
+      border: none;
+      border-radius: 8px;
+      font-family: 'Noto Sans SC', sans-serif;
+      cursor: pointer;
+      transition: all 0.18s;
+      padding: 10px 16px;
+      white-space: nowrap;
+    }
+
+    .pb .pb-label { font-size: 14px; }
+    .pb .pb-key  { font-size: 10px; opacity: 0.55; font-family: monospace; background: rgba(0,0,0,0.2); border-radius: 3px; padding: 1px 5px; }
+
+    .pb-red { background: var(--red); color: #fff; }
+    .pb-red:hover { background: var(--red-dark); transform: translateY(-1px); box-shadow: 0 4px 14px rgba(192,57,43,0.4); }
+    .pb-red:active { transform: translateY(0); }
+
+    .pb-gold { background: rgba(212,168,67,0.18); border: 1px solid rgba(212,168,67,0.4); color: var(--gold-light); }
+    .pb-gold:hover { background: rgba(212,168,67,0.32); }
+
+    .pb-ghost { background: rgba(255,255,255,0.07); border: 1px solid rgba(255,255,255,0.14); color: rgba(253,246,227,0.58); }
+    .pb-ghost:hover { background: rgba(255,255,255,0.13); }
+
+    .pb-green { background: rgba(39,174,96,0.2); border: 1px solid rgba(39,174,96,0.4); color: #2ecc71; }
+    .pb-green:hover { background: rgba(39,174,96,0.32); }
+
+    .quiz-action-row {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-top: 2px;
+    }
+
+    /* Answer reveal */
+    .answer-reveal {
+      margin-top: 14px;
+      padding: 14px 20px;
+      border-radius: 8px;
+      text-align: center;
+      font-family: 'Noto Serif SC', serif;
+      font-size: 28px;
+      letter-spacing: 4px;
+      display: none;
+      animation: fadeUp 0.25s ease;
+    }
+
+    .answer-reveal.show { display: block; }
+    .answer-reveal.reveal-hint { background: rgba(212,168,67,0.1); border: 1px solid rgba(212,168,67,0.3); color: var(--gold-light); }
+    .answer-reveal.reveal-correct { background: rgba(39,174,96,0.1); border: 1px solid rgba(39,174,96,0.4); color: #2ecc71; }
+
+    /* Start state */
+    .quiz-start-state {
+      text-align: center;
+      padding: 10px 0;
+    }
+
+    .pb-start {
+      padding: 16px 52px;
+      font-size: 17px;
+      border-radius: 10px;
+      box-shadow: 0 6px 24px rgba(192,57,43,0.35);
+    }
+
+    /* ─── SEQUENTIAL MODE ─── */
+    .seq-label {
+      display: block;
+      font-size: 13px;
+      color: rgba(253,246,227,0.55);
+      margin-bottom: 9px;
+      letter-spacing: 0.5px;
+    }
+
+    .seq-input {
+      width: 100%;
+      padding: 14px 18px;
+      font-size: 16px;
+      font-family: 'Noto Serif SC', serif;
+      background: rgba(255,255,255,0.08);
+      border: 2px solid rgba(212,168,67,0.28);
+      border-radius: 8px;
+      color: var(--paper);
+      outline: none;
+      letter-spacing: 2px;
+      transition: border-color 0.2s;
+      margin-bottom: 14px;
+    }
+
+    .seq-input:focus { border-color: var(--gold); }
+    .seq-input::placeholder { color: rgba(253,246,227,0.22); font-size: 14px; letter-spacing: 1px; }
+
+    .seq-controls { display: flex; gap: 10px; }
+
+    .seq-progress {
+      display: none;
+      margin-top: 22px;
+    }
+
+    .seq-progress.show { display: block; }
+
+    .seq-progress-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 8px;
+    }
+
+    .seq-progress-label { font-size: 12px; color: rgba(253,246,227,0.4); }
+    .seq-progress-count { font-size: 12px; color: var(--gold-light); font-family: 'Noto Serif SC', serif; }
+
+    .seq-bar-wrap {
+      background: rgba(255,255,255,0.09);
+      border-radius: 4px;
+      height: 5px;
+      margin-bottom: 16px;
+      overflow: hidden;
+    }
+
+    .seq-bar {
+      height: 100%;
+      background: linear-gradient(90deg, var(--red), var(--gold));
+      border-radius: 4px;
+      transition: width 0.45s ease;
+    }
+
+    .seq-items {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      max-height: 160px;
+      overflow-y: auto;
+    }
+
+    .seq-items::-webkit-scrollbar { width: 4px; }
+    .seq-items::-webkit-scrollbar-thumb { background: rgba(212,168,67,0.3); border-radius: 2px; }
+
+    .seq-pill {
+      padding: 6px 14px;
+      border-radius: 20px;
+      font-family: 'Noto Serif SC', serif;
+      font-size: 15px;
+      background: rgba(255,255,255,0.07);
+      color: rgba(253,246,227,0.4);
+      border: 1px solid rgba(255,255,255,0.1);
+      transition: all 0.3s ease;
+    }
+
+    .seq-pill.done {
+      background: rgba(39,174,96,0.18);
+      border-color: rgba(39,174,96,0.45);
+      color: #2ecc71;
+    }
+
+    .seq-pill.current {
+      background: rgba(192,57,43,0.3);
+      border-color: var(--red-light);
+      color: #fff;
+      transform: scale(1.12);
+      box-shadow: 0 0 14px rgba(192,57,43,0.45);
+      animation: pulse 0.75s ease infinite;
+    }
+
+    /* ─── KEYBOARD HINTS ─── */
+    .kb-hints {
+      margin-top: 22px;
+      padding-top: 16px;
+      border-top: 1px solid rgba(255,255,255,0.07);
+      display: flex;
+      gap: 18px;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+
+    .kh {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      font-size: 12px;
+      color: rgba(253,246,227,0.33);
+    }
+
+    .kh kbd {
+      background: rgba(255,255,255,0.09);
+      border: 1px solid rgba(255,255,255,0.16);
+      border-bottom-width: 2px;
+      border-radius: 4px;
+      padding: 2px 8px;
+      font-size: 11px;
+      font-family: monospace;
+      color: rgba(253,246,227,0.58);
+    }
+
+    @media (max-width: 600px) {
+      body { padding: 20px 10px 60px; }
+      th, td { min-width: 52px; height: 44px; font-size: 13px; }
+      thead th { font-size: 14px; }
+      tbody td:first-child { font-size: 15px; min-width: 40px; }
+      .practice-panel { padding: 20px 16px; }
+      .quiz-input-row { flex-wrap: wrap; }
+      .practice-tabs { gap: 8px; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- HEADER -->
+  <div class="header">
+    <div class="header-badge">汉语拼音 · Hàn Ngữ Phiên Âm</div>
+    <h1>Bảng <span>Phiên Âm</span> Tiếng Trung</h1>
+    <p class="subtitle">Thanh mẫu × Vận mẫu · Bấm vào ô để nghe phát âm</p>
+  </div>
+
+  <!-- TIP -->
+  <div class="tip">
+    <span class="tip-icon">👆</span>
+    Nhấp vào bất kỳ ô nào để nghe phát âm tiếng Trung chuẩn
+  </div>
+
+  <!-- TABLE -->
+  <div class="table-wrap">
+    <table id="pinyinTable">
+      <thead>
+        <tr id="headerRow">
+          <th></th>
+          <th class="header-cell" data-pinyin="a">a</th>
+          <th class="header-cell" data-pinyin="o">o</th>
+          <th class="header-cell" data-pinyin="e">e</th>
+          <th class="header-cell" data-pinyin="i">i</th>
+          <th class="header-cell" data-pinyin="u">u</th>
+          <th class="header-cell" data-pinyin="ü">ü</th>
+          <th class="header-cell" data-pinyin="ai">ai</th>
+          <th class="header-cell" data-pinyin="ei">ei</th>
+          <th class="header-cell" data-pinyin="ao">ao</th>
+          <th class="header-cell" data-pinyin="ou">ou</th>
+        </tr>
+      </thead>
+      <tbody id="tableBody"></tbody>
+    </table>
+  </div>
+
+  <!-- LEGEND -->
+  <div class="legend">
+    <div class="legend-item"><div class="legend-swatch" style="background:#e8f0f8"></div>b / p · d / t</div>
+    <div class="legend-item"><div class="legend-swatch" style="background:#fce8e8"></div>m / f</div>
+    <div class="legend-item"><div class="legend-swatch" style="background:#e8f5e8"></div>n / l</div>
+    <div class="legend-item"><div class="legend-swatch" style="background:#f5f0e8"></div>g / k / h</div>
+  </div>
+
+  <!-- VOICE STATUS -->
+  <div class="voice-status" id="voiceStatus">
+    <span class="voice-dot" id="voiceDot"></span>
+    <span id="voiceMsg">Đang kiểm tra giọng đọc tiếng Trung…</span>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════════
+       PRACTICE SECTION
+  ═══════════════════════════════════════════════════ -->
+
+  <div class="practice-divider">
+    <div class="practice-divider-inner">
+      <span class="practice-divider-zh">练习</span>
+      <span class="practice-divider-vi">Bài Tập Luyện Nghe</span>
+    </div>
+  </div>
+
+  <div class="practice-section">
+
+    <!-- TABS -->
+    <div class="practice-tabs">
+      <button class="ptab active" id="tab-random" onclick="switchTab('random')">
+        <span class="ptab-icon">🔀</span>
+        <span class="ptab-label">Ngẫu nhiên</span>
+        <span class="ptab-desc">Nghe & nhập phiên âm</span>
+      </button>
+      <button class="ptab" id="tab-sequential" onclick="switchTab('sequential')">
+        <span class="ptab-icon">📋</span>
+        <span class="ptab-label">Tuần tự</span>
+        <span class="ptab-desc">Phát danh sách tự nhập</span>
+      </button>
+    </div>
+
+    <!-- ── RANDOM PANEL ── -->
+    <div class="practice-panel" id="panel-random">
+
+      <!-- Waveform display -->
+      <div class="quiz-stage">
+        <div class="quiz-wave" id="quizWave">
+          <div class="quiz-wave-bar paused"></div>
+          <div class="quiz-wave-bar paused"></div>
+          <div class="quiz-wave-bar paused"></div>
+          <div class="quiz-wave-bar paused"></div>
+          <div class="quiz-wave-bar paused"></div>
+        </div>
+        <div class="quiz-score-text" id="quizScoreText">Nhấn "Bắt đầu" để luyện tập</div>
+        <div class="quiz-streak" id="quizStreak">🔥 Chuỗi đúng: 0</div>
+      </div>
+
+      <!-- Start state -->
+      <div class="quiz-start-state" id="quizStartState">
+        <button class="pb pb-red pb-start" onclick="startRandomMode()">
+          <span class="pb-label">🎯 Bắt đầu luyện tập</span>
+        </button>
+      </div>
+
+      <!-- Active quiz controls -->
+      <div id="quizControls" style="display:none">
+        <div class="quiz-input-row">
+          <input type="text" id="quizInput" class="quiz-input"
+            placeholder="Nhập phiên âm…"
+            autocomplete="off" spellcheck="false" autocorrect="off">
+          <button class="pb pb-red" onclick="checkAnswer()" id="btnCheck">
+            <span class="pb-label">Kiểm tra</span>
+            <span class="pb-key">↵ Enter</span>
+          </button>
+          <button class="pb pb-gold" onclick="replayRandom()" id="btnReplay">
+            <span class="pb-label">🔁 Nghe lại</span>
+            <span class="pb-key">F2</span>
+          </button>
+        </div>
+
+        <div class="quiz-action-row">
+          <button class="pb pb-ghost" onclick="revealAnswer()" id="btnReveal">
+            <span class="pb-label">👁 Xem đáp án</span>
+            <span class="pb-key">F1</span>
+          </button>
+          <button class="pb pb-green" onclick="nextRandom()" id="btnNext" style="display:none">
+            <span class="pb-label">Từ tiếp theo →</span>
+            <span class="pb-key">↵ Enter</span>
+          </button>
+          <button class="pb pb-ghost" onclick="stopRandomMode()" style="margin-left:auto">
+            <span class="pb-label">⏹ Dừng</span>
+            <span class="pb-key">Esc×2</span>
+          </button>
+        </div>
+
+        <div class="answer-reveal" id="answerReveal"></div>
+      </div>
+
+      <!-- Keyboard hints -->
+      <div class="kb-hints" id="kbHintsRandom">
+        <span class="kh"><kbd>Enter</kbd> Kiểm tra / Tiếp theo</span>
+        <span class="kh"><kbd>F2</kbd> Nghe lại</span>
+        <span class="kh"><kbd>F1</kbd> Xem đáp án</span>
+        <span class="kh"><kbd>Esc</kbd> Dừng</span>
+      </div>
+    </div>
+
+    <!-- ── SEQUENTIAL PANEL ── -->
+    <div class="practice-panel" id="panel-sequential" style="display:none">
+
+      <label class="seq-label" for="seqInput">
+        Nhập các phiên âm cách nhau dấu cách, rồi nhấn <kbd style="background:rgba(255,255,255,0.1);border:1px solid rgba(255,255,255,0.2);border-radius:3px;padding:1px 7px;font-size:11px">Enter</kbd> hoặc bấm Bắt đầu:
+      </label>
+      <input type="text" id="seqInput" class="seq-input"
+        placeholder="vd: ba bo bi bu bai bei bao dou guo hua…"
+        spellcheck="false" autocorrect="off">
+
+      <div class="seq-controls">
+        <button class="pb pb-red" id="btnStartSeq" onclick="startSeq()" style="flex:1;padding:13px">
+          <span class="pb-label">▶ Bắt đầu phát</span>
+          <span class="pb-key">Enter trong ô nhập</span>
+        </button>
+        <button class="pb pb-ghost" id="btnStopSeq" onclick="stopSeq()" style="display:none;flex:1;padding:13px">
+          <span class="pb-label">⏹ Dừng lại</span>
+          <span class="pb-key">Esc</span>
+        </button>
+      </div>
+
+      <div class="seq-progress" id="seqProgress">
+        <div class="seq-progress-top">
+          <span class="seq-progress-label">Tiến độ</span>
+          <span class="seq-progress-count" id="seqCount">0 / 0</span>
+        </div>
+        <div class="seq-bar-wrap">
+          <div class="seq-bar" id="seqBar" style="width:0%"></div>
+        </div>
+        <div class="seq-items" id="seqItems"></div>
+      </div>
+
+      <div class="kb-hints">
+        <span class="kh"><kbd>Enter</kbd> Bắt đầu phát</span>
+        <span class="kh"><kbd>Esc</kbd> Dừng lại</span>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- TOAST -->
+  <div id="toast">
+    <div>
+      <div class="toast-pinyin" id="toastText"></div>
+      <div class="toast-label">đang phát âm…</div>
+    </div>
+    <span style="font-size:20px;">🔊</span>
+  </div>
+
+  <script>
+    // ─── DATA ───────────────────────────────────────────────────────────────
+    const initials = ['b','p','m','f','d','t','n','l','g','k','h'];
+    const finals   = ['a','o','e','i','u','ü','ai','ei','ao','ou'];
+
+    const data = {
+      b: ['ba','bo', null,'bi','bu', null,'bai','bei','bao', null],
+      p: ['pa','po', null,'pi','pu', null,'pai','pei','pao','pou'],
+      m: ['ma','mo','me','mi','mu',  null,'mai','mei','mao','mou'],
+      f: ['fa','fo', null, null,'fu',null, null,'fei', null,'fou'],
+      d: ['da', null,'de','di','du', null,'dai','dei','dao','dou'],
+      t: ['ta', null,'te','ti','tu', null,'tai', null,'tao','tou'],
+      n: ['na', null,'ne','ni','nu','nü','nai','nei','nao','nou'],
+      l: ['la', null,'le','li','lu','lü','lai','lei','lao','lou'],
+      g: ['ga', null,'ge', null,'gu',null,'gai','gei','gao','gou'],
+      k: ['ka', null,'ke', null,'ku',null,'kai','kei','kao','kou'],
+      h: ['ha', null,'he', null,'hu',null,'hai','hei','hao','hou'],
+    };
+
+    // All valid syllables (table cells + standalone initials + standalone finals)
+    const allSyllables = [];
+    Object.values(data).forEach(row => row.forEach(s => { if (s) allSyllables.push(s); }));
+    const allPinyinItems = [...initials, ...finals, ...allSyllables];
+
+    // ─── BUILD TABLE ─────────────────────────────────────────────────────────
+    const tbody = document.getElementById('tableBody');
+
+    initials.forEach(init => {
+      const row = document.createElement('tr');
+      const th = document.createElement('td');
+      th.textContent = init;
+      th.dataset.pinyin = init;
+      th.setAttribute('title', `Phát âm: ${init}`);
+      th.addEventListener('click', () => playHeader(init, th, 'row'));
+      row.appendChild(th);
+
+      data[init].forEach((syllable) => {
+        const td = document.createElement('td');
+        if (syllable) {
+          td.textContent = syllable;
+          td.className = 'cell';
+          td.dataset.pinyin = syllable;
+          td.addEventListener('click', () => playSyllable(syllable, td));
+          td.setAttribute('title', `Phát âm: ${syllable}`);
+        } else {
+          td.className = 'empty';
+        }
+        row.appendChild(td);
+      });
+
+      tbody.appendChild(row);
+    });
+
+    document.querySelectorAll('thead th.header-cell').forEach(th => {
+      th.addEventListener('click', () => playHeader(th.dataset.pinyin, th, 'col'));
+    });
+
+    // ─── SPEECH / TABLE ──────────────────────────────────────────────────────
+    let chineseVoice = null;
+    let activeCell   = null;
+    let activeHeader = null;
+    let toastTimer   = null;
+
+    function playHeader(syllable, el, type) {
+      if (activeHeader) {
+        const cls = activeHeader.type === 'row' ? 'row-header-playing' : 'playing';
+        activeHeader.el.classList.remove(cls);
+      }
+      playSyllable(syllable, null, el, type);
+    }
+
+    function initVoices() {
+      const voices = speechSynthesis.getVoices();
+      chineseVoice =
+        voices.find(v => v.lang === 'zh-CN') ||
+        voices.find(v => v.lang === 'zh-TW') ||
+        voices.find(v => v.lang.startsWith('zh')) || null;
+
+      const dot = document.getElementById('voiceDot');
+      const msg = document.getElementById('voiceMsg');
+      if (chineseVoice) {
+        dot.classList.remove('red');
+        msg.textContent = `Giọng đọc: ${chineseVoice.name} (${chineseVoice.lang})`;
+      } else {
+        dot.classList.add('red');
+        msg.textContent = 'Không tìm thấy giọng tiếng Trung — sẽ dùng giọng mặc định';
+      }
+    }
+
+    if (speechSynthesis.onvoiceschanged !== undefined) speechSynthesis.onvoiceschanged = initVoices;
+    setTimeout(initVoices, 400);
+
+    function playSyllable(syllable, cell, headerEl, headerType) {
+      speechSynthesis.cancel();
+      tryPlayAudio(['mp3','m4a','ogg'], syllable, cell, headerEl, headerType);
+    }
+
+    function tryPlayAudio(formats, syllable, cell, headerEl, headerType) {
+      if (formats.length === 0) { speakWithTTS(syllable, cell, headerEl, headerType); return; }
+      const [fmt, ...rest] = formats;
+      const audio = new Audio(`audio/${syllable}.${fmt}`);
+      audio.addEventListener('canplaythrough', () => {
+        setPlaying(cell, syllable, headerEl, headerType);
+        audio.play();
+        audio.addEventListener('ended', () => clearPlaying(cell, headerEl, headerType), { once: true });
+      }, { once: true });
+      audio.addEventListener('error', () => tryPlayAudio(rest, syllable, cell, headerEl, headerType), { once: true });
+    }
+
+    function speakWithTTS(syllable, cell, headerEl, headerType) {
+      speechSynthesis.cancel();
+      const utter = new SpeechSynthesisUtterance(syllable);
+      utter.lang = 'zh-CN'; utter.rate = 0.85; utter.pitch = 1;
+      if (chineseVoice) utter.voice = chineseVoice;
+      setPlaying(cell, syllable, headerEl, headerType);
+      utter.onend = () => clearPlaying(cell, headerEl, headerType);
+      utter.onerror = () => clearPlaying(cell, headerEl, headerType);
+      speechSynthesis.speak(utter);
+    }
+
+    function setPlaying(cell, syllable, headerEl, headerType) {
+      if (activeCell) activeCell.classList.remove('playing');
+      activeCell = cell;
+      if (cell) cell.classList.add('playing');
+
+      if (activeHeader) {
+        const cls = activeHeader.type === 'row' ? 'row-header-playing' : 'playing';
+        activeHeader.el.classList.remove(cls);
+        activeHeader = null;
+      }
+      if (headerEl) {
+        const cls = headerType === 'row' ? 'row-header-playing' : 'playing';
+        headerEl.classList.add(cls);
+        activeHeader = { el: headerEl, type: headerType };
+      }
+
+      clearTimeout(toastTimer);
+      document.getElementById('toastText').textContent = syllable;
+      const toast = document.getElementById('toast');
+      toast.classList.add('show');
+      toastTimer = setTimeout(() => toast.classList.remove('show'), 2200);
+    }
+
+    function clearPlaying(cell, headerEl, headerType) {
+      if (cell) cell.classList.remove('playing');
+      if (activeCell === cell) activeCell = null;
+      if (headerEl) {
+        const cls = headerType === 'row' ? 'row-header-playing' : 'playing';
+        headerEl.classList.remove(cls);
+        if (activeHeader && activeHeader.el === headerEl) activeHeader = null;
+      }
+    }
+
+    // ─── PRACTICE: SHARED ────────────────────────────────────────────────────
+    let currentPracticeAudio = null;
+
+    function playAudioForPractice(syllable, onEnd) {
+      if (currentPracticeAudio) {
+        currentPracticeAudio.pause();
+        currentPracticeAudio.src = '';
+        currentPracticeAudio = null;
+      }
+      speechSynthesis.cancel();
+      practiceWave(true);
+      tryPracticeAudio(['mp3','m4a','ogg'], syllable, onEnd);
+    }
+
+    function tryPracticeAudio(formats, syllable, onEnd) {
+      if (formats.length === 0) {
+        // TTS fallback
+        const utter = new SpeechSynthesisUtterance(syllable);
+        utter.lang = 'zh-CN'; utter.rate = 0.85;
+        if (chineseVoice) utter.voice = chineseVoice;
+        utter.onend  = () => { practiceWave(false); if (onEnd) onEnd(); };
+        utter.onerror = () => { practiceWave(false); if (onEnd) onEnd(); };
+        speechSynthesis.speak(utter);
+        return;
+      }
+      const [fmt, ...rest] = formats;
+      const audio = new Audio(`audio/${syllable}.${fmt}`);
+      audio.addEventListener('canplaythrough', () => {
+        currentPracticeAudio = audio;
+        audio.play();
+        audio.addEventListener('ended', () => {
+          currentPracticeAudio = null;
+          practiceWave(false);
+          if (onEnd) onEnd();
+        }, { once: true });
+      }, { once: true });
+      audio.addEventListener('error', () => tryPracticeAudio(rest, syllable, onEnd), { once: true });
+    }
+
+    function practiceWave(playing) {
+      document.querySelectorAll('.quiz-wave-bar').forEach(b => {
+        b.classList.toggle('paused', !playing);
+      });
+    }
+
+    function shuffleArray(arr) {
+      const a = [...arr];
+      for (let i = a.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [a[i], a[j]] = [a[j], a[i]];
+      }
+      return a;
+    }
+
+    function switchTab(mode) {
+      ['random','sequential'].forEach(m => {
+        document.getElementById(`tab-${m}`).classList.toggle('active', m === mode);
+        document.getElementById(`panel-${m}`).style.display = m === mode ? '' : 'none';
+      });
+    }
+
+    // ─── PRACTICE: RANDOM MODE ───────────────────────────────────────────────
+    let randomActive   = false;
+    let randomQueue    = [];
+    let randomIdx      = 0;
+    let currentWord    = null;
+    let revealed       = false;
+    let waitingNext    = false;
+    let score          = { correct: 0, total: 0, streak: 0 };
+
+    function startRandomMode() {
+      randomActive = true;
+      randomQueue  = shuffleArray(allPinyinItems);
+      randomIdx    = 0;
+      score        = { correct: 0, total: 0, streak: 0 };
+
+      document.getElementById('quizStartState').style.display = 'none';
+      document.getElementById('quizControls').style.display   = '';
+      updateScoreDisplay();
+      nextRandom();
+    }
+
+    function stopRandomMode() {
+      randomActive = false;
+      if (currentPracticeAudio) { currentPracticeAudio.pause(); currentPracticeAudio = null; }
+      speechSynthesis.cancel();
+      practiceWave(false);
+      document.getElementById('quizControls').style.display   = 'none';
+      document.getElementById('quizStartState').style.display = '';
+      document.getElementById('quizScoreText').textContent    = 'Nhấn "Bắt đầu" để luyện tập';
+      document.getElementById('quizStreak').classList.remove('show');
+    }
+
+    function nextRandom() {
+      if (!randomActive) return;
+      if (randomIdx >= randomQueue.length) {
+        randomQueue = shuffleArray(allPinyinItems);
+        randomIdx = 0;
+      }
+      currentWord  = randomQueue[randomIdx++];
+      revealed     = false;
+      waitingNext  = false;
+
+      const input = document.getElementById('quizInput');
+      input.value = '';
+      input.classList.remove('state-correct','state-wrong');
+      input.disabled = false;
+
+      document.getElementById('answerReveal').className = 'answer-reveal';
+      document.getElementById('btnReveal').style.display = '';
+      document.getElementById('btnNext').style.display   = 'none';
+
+      setTimeout(() => input.focus(), 50);
+      playAudioForPractice(currentWord, null);
+    }
+
+    function replayRandom() {
+      if (currentWord) playAudioForPractice(currentWord, null);
+    }
+
+    function normalize(s) {
+      return s.trim().toLowerCase().replace(/v/g, 'ü').replace(/\s+/g, '');
+    }
+
+    function checkAnswer() {
+      if (!randomActive || !currentWord) return;
+
+      // If waiting for "next", Enter acts as next
+      if (waitingNext) { nextRandom(); return; }
+      if (revealed) return;
+
+      const input = document.getElementById('quizInput');
+      const answer = normalize(input.value);
+      const correct = normalize(currentWord);
+
+      score.total++;
+
+      if (answer === correct) {
+        score.correct++;
+        score.streak++;
+        input.classList.add('state-correct');
+        input.disabled = true;
+        updateScoreDisplay();
+        showReveal(currentWord, true);
+        waitingNext = true;
+        document.getElementById('btnReveal').style.display = 'none';
+        document.getElementById('btnNext').style.display   = '';
+        // Auto-advance after 1.2s
+        setTimeout(() => { if (waitingNext && randomActive) nextRandom(); }, 1200);
+      } else {
+        score.streak = 0;
+        input.classList.add('state-wrong');
+        updateScoreDisplay();
+        // Clear wrong state
+        setTimeout(() => {
+          input.classList.remove('state-wrong');
+          input.value = '';
+          input.focus();
+        }, 420);
+      }
+    }
+
+    function revealAnswer() {
+      if (!randomActive || !currentWord || revealed) return;
+      revealed    = true;
+      waitingNext = true;
+
+      const input = document.getElementById('quizInput');
+      input.disabled = true;
+      score.streak = 0;
+      updateScoreDisplay();
+
+      showReveal(currentWord, false);
+      document.getElementById('btnReveal').style.display = 'none';
+      document.getElementById('btnNext').style.display   = '';
+    }
+
+    function showReveal(text, isCorrect) {
+      const el = document.getElementById('answerReveal');
+      el.textContent = isCorrect ? '✓  ' + text : text;
+      el.className = 'answer-reveal show ' + (isCorrect ? 'reveal-correct' : 'reveal-hint');
+    }
+
+    function updateScoreDisplay() {
+      const pct = score.total === 0 ? 0 : Math.round(score.correct / score.total * 100);
+      document.getElementById('quizScoreText').textContent =
+        `Đúng: ${score.correct} / ${score.total}  (${pct}%)`;
+
+      const streakEl = document.getElementById('quizStreak');
+      if (score.streak >= 2) {
+        streakEl.textContent = `🔥 Chuỗi đúng: ${score.streak}`;
+        streakEl.classList.add('show');
+      } else {
+        streakEl.classList.remove('show');
+      }
+    }
+
+    // ─── PRACTICE: SEQUENTIAL MODE ───────────────────────────────────────────
+    let seqList    = [];
+    let seqIdx     = 0;
+    let seqRunning = false;
+
+    function startSeq() {
+      const raw = document.getElementById('seqInput').value.trim();
+      if (!raw) return;
+
+      seqList    = raw.split(/\s+/).filter(Boolean);
+      seqIdx     = 0;
+      seqRunning = true;
+
+      renderSeqPills();
+      document.getElementById('seqProgress').classList.add('show');
+      document.getElementById('btnStartSeq').style.display = 'none';
+      document.getElementById('btnStopSeq').style.display  = '';
+      updateSeqUI();
+      playSeqNext();
+    }
+
+    function stopSeq() {
+      seqRunning = false;
+      if (currentPracticeAudio) { currentPracticeAudio.pause(); currentPracticeAudio = null; }
+      speechSynthesis.cancel();
+      practiceWave(false);
+      document.getElementById('btnStartSeq').style.display = '';
+      document.getElementById('btnStopSeq').style.display  = 'none';
+    }
+
+    function playSeqNext() {
+      if (!seqRunning || seqIdx >= seqList.length) {
+        seqRunning = false;
+        practiceWave(false);
+        document.getElementById('btnStartSeq').style.display = '';
+        document.getElementById('btnStopSeq').style.display  = 'none';
+        updateSeqUI();
+        return;
+      }
+      updateSeqUI();
+      const word = seqList[seqIdx];
+      seqIdx++;
+      playAudioForPractice(word, () => {
+        if (!seqRunning) return;
+        setTimeout(playSeqNext, 700);
+      });
+    }
+
+    function renderSeqPills() {
+      const c = document.getElementById('seqItems');
+      c.innerHTML = '';
+      seqList.forEach((s, i) => {
+        const el = document.createElement('span');
+        el.className = 'seq-pill';
+        el.id = `sp-${i}`;
+        el.textContent = s;
+        c.appendChild(el);
+      });
+    }
+
+    function updateSeqUI() {
+      const bar   = document.getElementById('seqBar');
+      const count = document.getElementById('seqCount');
+      const done  = seqRunning ? seqIdx - 1 : seqIdx;
+      const pct   = seqList.length ? (done / seqList.length * 100) : 0;
+      bar.style.width = Math.min(100, pct) + '%';
+      count.textContent = `${Math.min(done, seqList.length)} / ${seqList.length}`;
+
+      seqList.forEach((_, i) => {
+        const el = document.getElementById(`sp-${i}`);
+        if (!el) return;
+        el.className = 'seq-pill';
+        if (i < seqIdx - 1)      el.classList.add('done');
+        else if (i === seqIdx - 1 && seqRunning) el.classList.add('current');
+      });
+    }
+
+    // ─── KEYBOARD SHORTCUTS ──────────────────────────────────────────────────
+    let escCount = 0, escTimer = null;
+
+    document.addEventListener('keydown', e => {
+
+      // ── Table escape (existing) ──
+      if (e.key === 'Escape') {
+        speechSynthesis.cancel();
+        if (activeCell) clearPlaying(activeCell, null, null);
+        if (activeHeader) {
+          const cls = activeHeader.type === 'row' ? 'row-header-playing' : 'playing';
+          activeHeader.el.classList.remove(cls);
+          activeHeader = null;
+        }
+        document.getElementById('toast').classList.remove('show');
+
+        // Stop practice too
+        if (seqRunning) stopSeq();
+
+        // Double-Esc stops random mode
+        escCount++;
+        clearTimeout(escTimer);
+        escTimer = setTimeout(() => { escCount = 0; }, 600);
+        if (escCount >= 2 && randomActive) { stopRandomMode(); escCount = 0; }
+      }
+
+      // ── Practice: F1 = reveal, F2 = replay ──
+      if (e.key === 'F1' && randomActive) {
+        e.preventDefault();
+        revealAnswer();
+      }
+      if (e.key === 'F2' && randomActive) {
+        e.preventDefault();
+        replayRandom();
+      }
+    });
+
+    // Enter inside quiz input
+    document.addEventListener('DOMContentLoaded', () => {
+      document.getElementById('quizInput').addEventListener('keydown', e => {
+        if (e.key === 'Enter') { e.preventDefault(); checkAnswer(); }
+      });
+      document.getElementById('seqInput').addEventListener('keydown', e => {
+        if (e.key === 'Enter') { e.preventDefault(); startSeq(); }
+      });
+    });
+
+    // Wire up quiz input Enter (also before DOMContentLoaded fires)
+    setTimeout(() => {
+      const qi = document.getElementById('quizInput');
+      if (qi && !qi._hasEnter) {
+        qi._hasEnter = true;
+        qi.addEventListener('keydown', e => { if (e.key === 'Enter') { e.preventDefault(); checkAnswer(); } });
+      }
+      const si = document.getElementById('seqInput');
+      if (si && !si._hasEnter) {
+        si._hasEnter = true;
+        si.addEventListener('keydown', e => { if (e.key === 'Enter') { e.preventDefault(); startSeq(); } });
+      }
+    }, 100);
+
+  </script>
+</body>
+</html>
